@@ -1,0 +1,406 @@
+#:kivy 2.0.0
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+
+# Custom list item component with icon button
+<ListItemWithIcon@MDBoxLayout>:
+    text: ""                      # Primary text content
+    secondary_text: ""            # Secondary text content
+    icon: ""                      # Icon name for the button
+    on_release: None              # Release event handler
+    
+    orientation: 'horizontal'
+    adaptive_height: True
+    spacing: "10dp"
+    padding: ["10dp", "5dp", "10dp", "5dp"]
+    md_bg_color: get_color_from_hex("#283593")
+    radius: [8,]
+    
+    # Main content card
+    MDCard:
+        size_hint: 0.9, None
+        height: "72dp"
+        md_bg_color: get_color_from_hex("#283593")
+        radius: [8,]
+        on_release: root.on_release()
+        
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "10dp"
+            
+            # Primary text label
+            MDLabel:
+                text: root.text
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                font_style: "H6"
+            
+            # Secondary text label
+            MDLabel:
+                text: root.secondary_text
+                theme_text_color: "Custom"
+                text_color: .7, .7, .7, 1
+                font_style: "Caption"
+    
+    # Right-aligned action icon button
+    MDIconButton:
+        icon: root.icon
+        theme_text_color: "Custom"
+        text_color: 1, 0, 0, 1
+        pos_hint: {"center_y": .5}
+
+# Common screen template with standard layout
+<CommonScreen@Screen>:
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # Standard top app bar with back button
+        MDTopAppBar:
+            title: ""
+            title_align: "center"
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'menu')]]
+            md_bg_color: get_color_from_hex("#3949ab")
+            elevation: 0
+            title_padding: "72dp"
+        
+        # Standard content area
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "16dp"
+            spacing: "16dp"
+            md_bg_color: get_color_from_hex("#1a237e")
+
+# Main menu screen layout
+<MainMenu>:
+    BoxLayout:
+        orientation: 'vertical'
+        
+        # App title bar
+        MDTopAppBar:
+            title: "Workout App"
+            title_align: "center"
+            md_bg_color: get_color_from_hex("#3949ab")
+            elevation: 2
+            title_padding: "72dp"
+            
+        # Menu content area
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "20dp"
+            spacing: "20dp"
+            md_bg_color: get_color_from_hex("#1a237e")
+            
+            Widget:
+                size_hint_y: 0.2
+            
+            # Primary action button - Start Workout
+            MDCard:
+                size_hint: 0.9, None
+                height: "100dp"
+                pos_hint: {"center_x": .5}
+                md_bg_color: get_color_from_hex("#ff5722")
+                on_release: app.root.current = 'executor'
+                radius: [8,]
+                elevation: 0
+                
+                MDLabel:
+                    text: "Esegui Allenamento"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    font_style: "H5"
+            
+            Widget:
+                size_hint_y: 0.1
+            
+            # Secondary action - Manage Exercises
+            MDCard:
+                size_hint: 0.7, None
+                height: "56dp"
+                pos_hint: {"center_x": .5}
+                md_bg_color: get_color_from_hex("#3949ab")
+                on_release: app.root.current = 'exercises'
+                radius: [8,]
+                
+                MDLabel:
+                    text: "Gestione Esercizi"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+            
+            # Secondary action - Manage Workouts
+            MDCard:
+                size_hint: 0.7, None
+                height: "56dp"
+                pos_hint: {"center_x": .5}
+                md_bg_color: get_color_from_hex("#3949ab")
+                on_release: app.root.current = 'creator'
+                radius: [8,]
+                
+                MDLabel:
+                    text: "Gestione Scheda"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+            
+            Widget:
+                size_hint_y: 0.3
+
+# Exercise manager screen layout
+<ExerciseManager>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        
+        # Top bar with add group button
+        MDTopAppBar:
+            title: "Gruppi Muscolari"
+            title_align: "center"
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'menu')]]
+            right_action_items: [["plus", lambda x: root.show_add_group_dialog()]]
+            md_bg_color: get_color_from_hex("#3949ab")
+            elevation: 0
+            title_padding: "72dp"
+        
+        # Group list content area
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "16dp"
+            spacing: "16dp"
+            md_bg_color: get_color_from_hex("#1a237e")
+            
+            ScrollView:
+                MDList:
+                    id: muscle_group_list
+                    spacing: "8dp"
+                    padding: "24dp", "8dp"
+
+# Exercise list screen layout
+<ExerciseList>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        
+        # Top bar with add exercise button
+        MDTopAppBar:
+            id: topbar
+            title: "Esercizi"
+            title_align: "center"
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'exercises')]]
+            right_action_items: [["plus", lambda x: root.show_add_exercise_dialog()]]
+            md_bg_color: get_color_from_hex("#3949ab")
+            elevation: 0
+            title_padding: "72dp"
+        
+        # Exercise list content
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "16dp"
+            spacing: "16dp"
+            md_bg_color: get_color_from_hex("#1a237e")
+            
+            ScrollView:
+                MDList:
+                    id: exercise_list
+                    spacing: "8dp"
+                    padding: "24dp", "8dp"
+
+# Workout creator screen layout
+<WorkoutCreator>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        
+        # Top bar with add workout button
+        MDTopAppBar:
+            title: "Le tue Schede"
+            title_align: "center"
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'menu')]]
+            right_action_items: [["plus", lambda x: root.show_add_workout_dialog()]]
+            md_bg_color: get_color_from_hex("#3949ab")
+            elevation: 2
+            title_padding: "72dp"
+        
+        # Workout list content
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "16dp"
+            spacing: "16dp"
+            md_bg_color: get_color_from_hex("#1a237e")
+            
+            ScrollView:
+                MDList:
+                    id: workout_list
+                    spacing: "8dp"
+                    padding: "24dp", "8dp"
+
+# Workout detail screen layout
+<WorkoutDetail>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        
+        # Top bar for workout editing
+        MDTopAppBar:
+            id: detail_topbar
+            title: "Modifica Scheda"
+            title_align: "center"
+            left_action_items: [["arrow-left", lambda x: setattr(app.root, 'current', 'creator')]]
+            md_bg_color: get_color_from_hex("#3949ab")
+            elevation: 2
+            title_padding: "72dp"
+        
+        # Main content area with tabs and preview
+        MDBoxLayout:
+            orientation: 'vertical'
+            padding: "16dp"
+            spacing: "16dp"
+            md_bg_color: get_color_from_hex("#1a237e")
+            
+            # Tab section for groups and exercises
+            MDTabs:
+                id: tabs
+                size_hint_y: 0.4
+                background_color: get_color_from_hex("#3949ab")
+                fixed_tab_label: True
+                allow_stretch: True
+                
+                # Muscle groups tab
+                Tab:
+                    title: "Gruppi Muscolari"
+                    name: "Gruppi"
+                    ScrollView:
+                        MDList:
+                            id: group_list
+                            spacing: "8dp"
+                            padding: "24dp", "8dp"
+                
+                # Exercises tab
+                Tab:
+                    title: "Esercizi"
+                    name: "Esercizi"
+                    ScrollView:
+                        MDList:
+                            id: exercise_list
+                            spacing: "8dp"
+                            padding: "24dp", "8dp"
+            
+            # Workout preview section
+            MDCard:
+                orientation: 'vertical'
+                size_hint_y: 0.5
+                padding: "16dp"
+                spacing: "8dp"
+                md_bg_color: get_color_from_hex("#283593")
+                radius: [8,]
+                
+                MDLabel:
+                    text: "Anteprima Scheda"
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    bold: True
+                    size_hint_y: None
+                    height: "40dp"
+                
+                ScrollView:
+                    MDList:
+                        id: preview_list
+                        padding: "8dp"
+
+# Workout executor screen layout
+<WorkoutExecutor>:
+    MDBoxLayout:
+        orientation: 'vertical'
+        
+        # Top bar with navigation
+        MDTopAppBar:
+            title: "Esegui Allenamento"
+            title_align: "center"
+            left_action_items: [["arrow-left", lambda x: root._update_view_state(True) if root.ids.workout_screen_manager.current == 'execution' else setattr(app.root, 'current', 'menu')]]
+            md_bg_color: get_color_from_hex("#3949ab")
+            elevation: 0
+            title_padding: "72dp"
+        
+        # Main content area with screen manager
+        MDBoxLayout:
+            orientation: 'vertical'
+            md_bg_color: get_color_from_hex("#1a237e")
+            padding: "16dp"
+            
+            ScreenManager:
+                id: workout_screen_manager
+                
+                # Workout selection screen
+                Screen:
+                    name: 'selection'
+                    
+                    ScrollView:
+                        MDList:
+                            id: execution_list
+                            spacing: "16dp"
+                            padding: "24dp", "8dp"
+                
+                # Workout execution screen
+                Screen:
+                    name: 'execution'
+                    
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        spacing: "16dp"
+                        
+                        # Timer section
+                        MDCard:
+                            size_hint: 0.8, None
+                            height: "120dp"
+                            md_bg_color: get_color_from_hex("#283593")
+                            radius: [8]
+                            padding: "16dp"
+                            pos_hint: {"center_x": .5}
+                            elevation: 0
+                            
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: "8dp"
+                                
+                                # Timer display
+                                MDLabel:
+                                    id: timer_label
+                                    text: "00:00"
+                                    halign: "center"
+                                    theme_text_color: "Custom"
+                                    text_color: 1, 1, 1, 1
+                                    font_style: "H3"
+                                    bold: True
+                                
+                                # Timer controls
+                                MDBoxLayout:
+                                    orientation: 'horizontal'
+                                    spacing: "16dp"
+                                    size_hint_y: None
+                                    height: "48dp"
+                                    
+                                    # Reset button
+                                    MDRaisedButton:
+                                        text: "Reset"
+                                        size_hint_x: 0.5
+                                        md_bg_color: get_color_from_hex("#3949ab")
+                                        on_release: root.reset_workout_timer()
+                                        elevation: 0
+
+                                    # Start/Stop button
+                                    MDRaisedButton:
+                                        text: "Start/Stop"
+                                        size_hint_x: 0.5
+                                        md_bg_color: get_color_from_hex("#ff5722") if not root.timer_active else get_color_from_hex("#f44336")
+                                        on_release: root.toggle_timer()
+                                        elevation: 0
+                        
+                        # Exercise list section
+                        MDCard:
+                            orientation: 'vertical'
+                            size_hint_y: 1
+                            md_bg_color: get_color_from_hex("#283593")
+                            radius: [8]
+                            padding: "8dp"
+                            
+                            ScrollView:
+                                MDList:
+                                    id: exercise_execution_list
+                                    spacing: "8dp"
+                                    padding: "16dp", "8dp"
