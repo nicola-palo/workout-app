@@ -63,10 +63,4 @@ A comprehensive mobile application for managing workout routines, exercises, and
 2. Create your feature branch
 3. Commit your changes
 4. Push to the branch
-5. Create a Pull Request
-
-## License
-[Specify your license here]
-
-## Contact
-[Your contact information]
+5. Create a Pull RequesT
